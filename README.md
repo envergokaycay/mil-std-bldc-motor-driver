@@ -23,15 +23,15 @@ This repository contains the hardware design for a high-reliability, **28V 3-pha
 *The hardware design is modularized into four main functional blocks as shown below.*
 
 ### 1. Power Protection
-![Power Protection](images/power_protection.png)
+![Power Protection](images/power_protection.jpg)
 *Featuring **Ideal Diode** for reverse polarity protection, **TVS diodes** for transient suppression, and a **Pi-type EMI filter** designed to meet MIL-STD-461G standards.*
 
 ### 2. Power Stage
-![Power Stage](images/power_stage.png)
+![Power Stage](images/power_stage.jpg)
 *High-efficiency **3-phase inverter** stage with low-RDS(on) MOSFETs and optimized trace routing for high current paths.*
 
 ### 3. Power Distribution
-![Power Distribution](images/power_distribution.png)
+![Power Distribution](images/power_distribution.jpg)
 *Staged buck conversion utilizing **LM5005** (28V to 12V) and **TPS54302** (12V to 3.3V) for stable internal power delivery.*
 
 ### 4. MCU & Control
