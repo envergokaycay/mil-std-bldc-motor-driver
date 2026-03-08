@@ -27,7 +27,7 @@ This repository contains the hardware design for a high-reliability, **28V 3-pha
 *Featuring **Ideal Diode** for reverse polarity protection, **TVS diodes** for transient suppression, and a **Pi-type EMI filter** designed to meet MIL-STD-461G standards.*
 
 ### 2. Power Stage
-![Power Stage](images/power_stage.jpg)
+![Power Stage](images/inverter_power_stage.jpg)
 *High-efficiency **3-phase inverter** stage with low-RDS(on) MOSFETs and optimized trace routing for high current paths.*
 
 ### 3. Power Distribution
@@ -35,7 +35,7 @@ This repository contains the hardware design for a high-reliability, **28V 3-pha
 *Staged buck conversion utilizing **LM5005** (28V to 12V) and **TPS54302** (12V to 3.3V) for stable internal power delivery.*
 
 ### 4. MCU & Control
-![MCU Control](images/mcu_control.png)
+![MCU Control](images/mcu_control.jpg)
 *STM32G474 controller core with isolated **CAN** and **RS422** interfaces, and precise analog feedback paths for current sensing.*
 
 ## 🚀 Development Roadmap
