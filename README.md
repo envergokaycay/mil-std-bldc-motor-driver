@@ -1,29 +1,30 @@
 # 🚀 MIL-STD-461G Compliant 3-Phase BLDC Motor Driver
 
 ![Status](https://img.shields.io/badge/Status-Hardware_Complete-success?style=for-the-badge)
+![Power](https://img.shields.io/badge/Power-28V_%2F_30A-yellow?style=for-the-badge)
 ![MCU](https://img.shields.io/badge/MCU-STM32G431CBT3-blue?style=for-the-badge)
 ![Gate Driver](https://img.shields.io/badge/Gate_Driver-DRV8320HRTVR-red?style=for-the-badge)
 ![FOC](https://img.shields.io/badge/Control-Two--Shunt_FOC-orange?style=for-the-badge)
 
-This project is a complete hardware design for an industrial/military-grade Brushless DC (BLDC) Motor Driver, engineered to operate under harsh environmental conditions and meet strict electromagnetic compatibility (EMI/EMC) requirements based on **MIL-STD-461G**. 
+This project is a complete hardware design for a high-power, industrial/military-grade Brushless DC (BLDC) Motor Driver, engineered to operate under harsh environmental conditions and meet strict electromagnetic compatibility (EMI/EMC) requirements based on **MIL-STD-461G**. 
 
-The project was built from scratch using Altium Designer with a **Strict Hierarchical** design methodology. The hardware design (Schematic & PCB Layout) is 100% complete, featuring advanced signal integrity, power isolation, high-current routing, and FOC (Field Oriented Control) hardware optimizations.
+The system is designed to handle **28V and up to 30A of continuous/peak current**. It was built from scratch using Altium Designer with a **Strict Hierarchical** design methodology. The hardware design (Schematic & PCB Layout) is 100% complete, featuring advanced signal integrity, power isolation, high-current routing, and FOC (Field Oriented Control) hardware optimizations.
 
 ## 🌟 3D Hardware Showcase
 
-| Isometric View | Top View |
-|:---:|:---:|
-| <img src="images/3D_1.png" alt="3D Isometric" width="400"/> | <img src="images/3D_TOP.png" alt="3D Top" width="400"/> |
+| Isometric View 1 | Isometric View 2 | Top View |
+|:---:|:---:|:---:|
+| <img src="images/3D_1.png" alt="3D Isometric 1" width="260"/> | <img src="images/3D_2.png" alt="3D Isometric 2" width="260"/> | <img src="images/3D_TOP.png" alt="3D Top" width="260"/> |
 
 ---
 
 ## 🛠️ PCB Layout & Thermal Management
 
-The PCB layout was meticulously routed to handle 10A-15A continuous current while maintaining strict signal integrity for the analog front-end.
+The PCB layout was meticulously routed to safely handle **30A of continuous phase current** while maintaining strict signal integrity for the analog front-end.
 
 * **High-Current Polygons:** The Top and Bottom layers utilize massive polygon pours for the +28V input and phase outputs to minimize DC resistance and optimize thermal dissipation.
 * **Component Placement:** The STM32G4 and sensitive analog traces are physically isolated from the high-voltage switching nodes of the DRV8320 and CSD18532KCS MOSFETs.
-* **Via Stitching:** Extensive ground via stitching is implemented across the board to tie the return planes together, reducing loop inductance and EMI emissions.
+* **Via Stitching:** Extensive ground via stitching is implemented across the board to tie the return planes together, significantly reducing loop inductance and EMI emissions.
 
 | Top Layer (Polygons Enabled) | Bottom Layer (Routing & Ground Planes) |
 |:---:|:---:|
@@ -44,7 +45,7 @@ The architectural backbone of the system. Power and signal buses (Harness & Bus)
 ### 2. Power Protection Stage
 The system's first line of defense against electrical anomalies.
 * **Ideal Diode Controller:** Instead of a standard power diode, an **LM5050MK-1** paired with an N-Channel MOSFET is used for reverse polarity protection. 
-* **Hardware Detail:** The MOSFET is carefully oriented so its body diode blocks reverse current, preventing massive heat dissipation and voltage drops during high-current forward operation.
+* **Hardware Detail:** The MOSFET is carefully oriented so its body diode blocks reverse current, preventing massive heat dissipation and voltage drops during 30A forward operation.
 
 <img src="images/power_protection.jpg" alt="Power Protection" width="800"/>
 
@@ -63,7 +64,7 @@ Powered by the **STM32G431CBT3**, explicitly chosen for its advanced motor contr
 
 ### 5. Inverter Power Stage
 The high-current, high-speed switching core of the driver.
-* **Hardware:** Texas Instruments **DRV8320HRTVR** smart gate driver paired with **CSD18532KCS** (100A rated) power MOSFETs.
+* **Hardware:** Texas Instruments **DRV8320HRTVR** smart gate driver paired with **CSD18532KCS** (100A rated) power MOSFETs to easily handle 30A loads without thermal bottlenecking.
 * **EMI Slew-Rate Control:** Although the DRV8320 is a smart driver, empty 0R pads for series **Gate Resistors** were implemented to allow manual tuning of the MOSFET turn-on/turn-off slew rates—a critical requirement for passing MIL-STD-461G radiated emissions tests.
 * **RC Snubber Integration:** Direct capacitor connections to GND on the phase outputs were strictly avoided to prevent catastrophic shoot-through currents. Instead, footprints for **RC Snubbers** (Resistor + Capacitor in series) were placed to dampen voltage ringing and high-frequency emissions during switching transitions.
 
@@ -73,9 +74,16 @@ The high-current, high-speed switching core of the driver.
 
 ## ⚙️ Key Engineering Highlights
 
-1. **Star Grounding & Net Tie Isolation:**
-   To prevent "Ground Bounce" (massive switching currents returning to the source) from corrupting the MCU's sensitive millivolt-level analog measurements, the Analog Ground (`AGND`) and Power Ground (`PGND`/`GND`) are separated. They meet at exactly *one* physical location on the PCB via a **Net Tie (NT400)**, ensuring pristine Signal Integrity.
+1. **Robust Thermal & Power Routing:**
+   To safely handle 30A of continuous current, massive copper polygon pours are utilized for the +28V input and phase outputs. Extensive ground via stitching is implemented to tie the top and bottom return planes together, significantly reducing loop inductance and optimizing heat dissipation.
 2. **Professional Block Numbering (Annotation):**
    All components are numbered sequentially by hierarchical block (e.g., Protection is the 100 series, Inverter is the 400 series) allowing engineers to instantly locate physical components on the PCB by looking at their designator.
 3. **Zero-Error Design:**
    The strict hierarchical architecture and PCB layout were meticulously refined to resolve all design rule violations, resulting in perfectly clean ERC (Electrical Rule Check) and DRC (Design Rule Check) reports.
+
+---
+
+## 🚀 Future Work & Verification
+
+* **LTspice Thermal & Switching Simulation:** Simulating the CSD18532KCS Half-Bridge switching characteristics to mathematically verify switching losses, conduction losses, and RC Snubber damping efficiency under 30A load.
+* **Input Filter Inrush Simulation:** Modeling the initial power-on sequence to verify the LM5050MK-1 ideal diode controller's response and validate the input LC filter's damping performance.
